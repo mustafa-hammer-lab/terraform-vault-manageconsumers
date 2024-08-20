@@ -47,3 +47,24 @@ resource "vault_kv_secret_v2" "thing" {
     }
   }
 }
+
+resource "vault_kv_secret_v2" "servicenow" {
+  namespace           = var.namespace
+  mount               = vault_mount.kvv2.path
+  name                = "servicenow"
+  cas                 = 1
+  delete_all_versions = true
+  data_json = jsonencode(
+    {
+      thing = "thing",
+      foo   = "bar"
+    }
+  )
+  custom_metadata {
+    max_versions = 5
+    data = {
+      owner_email = var.owner_email,
+      charge_back = var.charge_back,
+    }
+  }
+}
